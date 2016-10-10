@@ -1,3 +1,5 @@
 *.pyc
 data/*
 !data/.gitkeep
+!data/zip_code_centroids.csv
+
