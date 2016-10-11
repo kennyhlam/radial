@@ -91,7 +91,7 @@ def remap_facilities(facs, zip_points, zip_dists):
     }
     weights.update(load_mds_weights())
     weights.update(load_claim_weights())
-    
+
     mds_data = load_mds()
     claim_data = load_claims()
 

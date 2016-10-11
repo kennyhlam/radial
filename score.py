@@ -1,5 +1,6 @@
 from data_loader import *
 
+
 def score_facility(fac, distance, weights, mds_data, claim_data):
     '''
         Takes a facility and computes a score for the facility
@@ -53,7 +54,8 @@ def score_facility(fac, distance, weights, mds_data, claim_data):
     score -= (claim_total * claims_frac)
 
     return score
-    
+
+
 def offset_score(facs, min_score):
     for f in facs:
         f['score'] = f['score'] - min_score + 1.0
