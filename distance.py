@@ -14,8 +14,8 @@ class Point:
             Constructor function, lat and lng must be in radians
         '''
         self.zip_code = zip_code
-        self.lat = lat*pi/180.0
-        self.lng = lng*pi/180.0
+        self.lat = lat
+        self.lng = lng
 
 
 def distance(p1, p2):
@@ -30,7 +30,12 @@ def distance(p1, p2):
         Returns:
         (float) representing the distance between the two points
     '''
-    h = sin((p2.lat - p1.lat)/2.0)**2 + \
-        cos(p1.lat)*cos(p2.lat)*sin((p2.lng - p1.lng)/2.0)**2
+    p2_lat = p2.lat * pi / 180.0
+    p2_lng = p2.lng * pi / 180.0
+    p1_lat = p1.lat * pi / 180.0
+    p1_lng = p1.lng * pi / 180.0
+
+    h = sin((p2_lat - p1_lat)/2.0)**2 + \
+        cos(p1_lat)*cos(p2_lat)*sin((p2_lng - p1_lng)/2.0)**2
 
     return 2.0 * EARTH_RADIUS_MILES * asin(sqrt(h))

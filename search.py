@@ -85,10 +85,22 @@ def remap_facilities(facs, zip_points, zip_dists):
         Returns:
         (array) of facility dict objects
     '''
+    weights = {
+        'distance': 1.0,
+        'overall_rating': .2
+    }
+    weights.update(load_mds_weights())
+    weights.update(load_claim_weights())
+    
+    mds_data = load_mds()
+    claim_data = load_claims()
+
     def output_format(fac):
+        global min_score
         zip_point = zip_points[fac['ZIP']]
         zip_dist = zip_dists[fac['ZIP']]
-        return {
+        score = score_facility(fac, zip_dist, weights, mds_data, claim_data)
+        d = {
             'name': fac['PROVNAME'],
             'address': fac['ADDRESS'],
             'city': fac['CITY'],
@@ -99,8 +111,12 @@ def remap_facilities(facs, zip_points, zip_dists):
             'lat': zip_point.lat,
             'lng': zip_point.lng,
             'distance_miles': zip_dist,
-            'score': fac['score']
+            'score': score
         }
+        if min_score is None or score < min_score:
+            min_score = score
+
+        return d
 
     return map(output_format, facs)
 
@@ -108,8 +124,10 @@ all_zips = load_zips()
 zip_dists = find_valid_zips(all_zips, args.zip_code, args.search_radius)
 valid_facs = find_valid_facilities(zip_dists.keys(),
                                    args.min_overall_rating)
-score_facilities(valid_facs, zip_dists)
+min_score = None
 valid_facs = remap_facilities(valid_facs, all_zips, zip_dists)
+print min_score
+offset_score(valid_facs, min_score)
 
 # sort by distance ascending (normal), and overall_rating descending (reverse)
 # (*-1) "reverses" good and bad ratings to sort correctly for overall_rating
