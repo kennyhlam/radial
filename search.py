@@ -126,7 +126,6 @@ valid_facs = find_valid_facilities(zip_dists.keys(),
                                    args.min_overall_rating)
 min_score = None
 valid_facs = remap_facilities(valid_facs, all_zips, zip_dists)
-print min_score
 offset_score(valid_facs, min_score)
 
 # sort by distance ascending (normal), and overall_rating descending (reverse)
