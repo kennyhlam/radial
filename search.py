@@ -63,6 +63,8 @@ def find_valid_facilities(zip_codes, rating):
 
     valid_facs = []
     for fac in possible_facs:
+        if len(fac['overall_rating']) == 0:
+            continue # skip facilities without a rating
         if int(fac['overall_rating']) >= rating:
             valid_facs.append(fac)
     return valid_facs
