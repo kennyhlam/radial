@@ -1,4 +1,4 @@
-from calculations import Point
+from distance import Point
 from collections import defaultdict
 import csv
 
@@ -49,3 +49,69 @@ def load_zips(zips=None):
                 points[zip_code] = p
 
     return points
+
+
+def load_mds_weights():
+    '''
+        Loads the weighting for MDS fields
+
+        Returns:
+        (dict) of { MDS-field: float } mappings
+    '''
+    weights = {}
+    with open('mds_weights') as f:
+        for row in f:
+            if row == '\n':
+                # empty line breaks
+                continue
+            code, msr, w = row.split('|')
+            weights[code.strip()] = float(w)
+    return weights
+
+
+def load_claim_weights():
+    '''
+        Loads the weighting for claim fields
+
+        Returns:
+        (dict) of { claim-field: float } mappings
+    '''
+    weights = {}
+    with open('claim_weights') as f:
+        for row in f:
+            if row == '\n':
+                # empty line breaks
+                continue
+            code, msr, w = row.split('|')
+            weights[code.strip()] = float(w)
+    return weights
+
+
+def load_mds():
+    '''
+        Loads the MDS data
+
+        Returns:
+        (dict) of { 'provider number' : [MDS data] } mappings
+    '''
+    mds = defaultdict(list)
+    with open('data/QualityMsrMDS_Download.csv') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            mds[row['PROVNUM']].append(row)
+    return dict(mds)
+
+
+def load_claims():
+    '''
+        Loads the claim data
+
+        Returns:
+        (dict) of { 'provider number' : [claim data] } mappings
+    '''
+    claims = defaultdict(list)
+    with open('data/QualityMsrClaims_Download.csv') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            claims[row['PROVNUM']].append(row)
+    return dict(claims)
